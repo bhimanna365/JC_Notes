@@ -20,8 +20,10 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 // Configurable CORS for production or development
 const corsOrigin = process.env.CORS_ORIGIN || '*';
+const allowedOrigins = corsOrigin === '*' ? '*' : corsOrigin.split(',').map(s => s.trim());
+
 app.use(cors({
-  origin: corsOrigin === '*' ? '*' : corsOrigin.split(',').map(s => s.trim()),
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Range']
 }));
@@ -31,7 +33,7 @@ app.use(express.json());
 // Initialize Real-time Socket.IO Server
 const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: '*',
+    origin: allowedOrigins,
     methods: ['GET', 'POST']
   }
 });

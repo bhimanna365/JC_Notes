@@ -83,6 +83,35 @@ export function sanitizeFilename(originalName) {
   return clean;
 }
 
+// Upload file to persistent Supabase Storage bucket (community-files) if configured
+export async function uploadFileToSupabaseStorage(storedFilename, localFilePath, mimeType) {
+  const supabaseUrl = process.env.SUPABASE_URL ? process.env.SUPABASE_URL.replace(/\/+$/, '') : '';
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+  if (!supabaseUrl || !supabaseKey) return null;
+
+  try {
+    if (!fs.existsSync(localFilePath)) return null;
+    const fileBuffer = fs.readFileSync(localFilePath);
+    const endpoint = `${supabaseUrl}/storage/v1/object/community-files/${encodeURIComponent(storedFilename)}`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': mimeType || 'application/octet-stream',
+        'x-upsert': 'true'
+      },
+      body: fileBuffer
+    });
+    if (res.ok) {
+      return `${supabaseUrl}/storage/v1/object/public/community-files/${encodeURIComponent(storedFilename)}`;
+    }
+  } catch (err) {
+    console.warn('Failed to upload file to Supabase Storage:', err.message);
+  }
+  return null;
+}
+
 // Storage configuration with diskStorage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

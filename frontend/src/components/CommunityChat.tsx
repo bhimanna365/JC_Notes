@@ -50,6 +50,21 @@ export interface ChatMessage {
   formattedTime?: string;
 }
 
+function getApiBaseUrl(): string {
+  const metaEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined;
+  if (metaEnv && (metaEnv.VITE_API_URL || metaEnv.VITE_PDF_BASE_URL)) {
+    return String(metaEnv.VITE_API_URL || metaEnv.VITE_PDF_BASE_URL).replace(/\/+$/, '');
+  }
+  return '';
+}
+
+function resolveChatFileUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  const apiBase = getApiBaseUrl();
+  return `${apiBase}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
 export interface ExistingWebsiteFile {
   id: string;
   name: string;
@@ -152,7 +167,8 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
       socketRef.current.disconnect();
     }
 
-    const targetUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+    const apiBase = getApiBaseUrl();
+    const targetUrl = apiBase || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
 
     const socket: Socket = io(targetUrl, {
       transports: ['websocket', 'polling'],
@@ -243,7 +259,8 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
       if (query) params.append('q', query);
       if (category && category !== 'all') params.append('category', category);
       
-      const res = await fetch(`/api/community/available-files?${params.toString()}`);
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/api/community/available-files?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.files)) {
@@ -329,7 +346,8 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
           formData.append('message', trimmed);
         }
 
-        const res = await fetch('/api/community/upload', {
+        const apiBase = getApiBaseUrl();
+        const res = await fetch(`${apiBase}/api/community/upload`, {
           method: 'POST',
           body: formData
         });
@@ -375,7 +393,8 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
           message: trimmed
         };
 
-        const res = await fetch('/api/community/attach-existing', {
+        const apiBase = getApiBaseUrl();
+        const res = await fetch(`${apiBase}/api/community/attach-existing`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -453,12 +472,14 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
         return;
       }
     }
-    window.open(file.url, '_blank', 'noopener,noreferrer');
+    const fullUrl = resolveChatFileUrl(file.url);
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
   };
 
   // Download file action
   const handleDownloadFile = (file: ChatFile) => {
-    const downloadUrl = file.url.includes('?') ? `${file.url}&download=1` : `${file.url}?download=1`;
+    const fullUrl = resolveChatFileUrl(file.url);
+    const downloadUrl = fullUrl.includes('?') ? `${fullUrl}&download=1` : `${fullUrl}?download=1`;
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = file.name;
@@ -619,10 +640,10 @@ export const CommunityChat: React.FC<CommunityChatProps> = ({ onNavigate }) => {
                             {msg.file.type === 'image' && (
                               <div 
                                 className="chat-file-image-preview" 
-                                onClick={() => setPreviewImageModal(msg.file!.url)}
+                                onClick={() => setPreviewImageModal(resolveChatFileUrl(msg.file!.url))}
                                 title="Click to view full image"
                               >
-                                <img src={msg.file.url} alt={msg.file.name} loading="lazy" />
+                                <img src={resolveChatFileUrl(msg.file.url)} alt={msg.file.name} loading="lazy" />
                               </div>
                             )}
 

@@ -57,8 +57,81 @@ const SEED_MESSAGES = [
 
 let messages = [];
 
-// Load messages from disk or initialize with seed
-function loadMessages() {
+// Supabase REST client configuration for persistent cloud storage
+const supabaseUrl = process.env.SUPABASE_URL ? process.env.SUPABASE_URL.replace(/\/+$/, '') : '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+export function isSupabaseConfigured() {
+  return Boolean(supabaseUrl && supabaseKey);
+}
+
+async function fetchSupabaseMessages(limit = 100) {
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const endpoint = `${supabaseUrl}/rest/v1/community_messages?select=*&order=timestamp.asc&limit=${limit}`;
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) {
+      console.warn(`Supabase messages fetch returned status ${res.status}`);
+      return null;
+    }
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      return data.map(m => ({
+        id: m.id,
+        name: 'Anamika',
+        author: 'Anamika',
+        message: m.message || m.text || '',
+        text: m.text || m.message || '',
+        file: m.file || undefined,
+        timestamp: Number(m.timestamp),
+        formattedTime: m.formatted_time || m.formattedTime
+      }));
+    }
+  } catch (err) {
+    console.warn('Failed to fetch messages from Supabase:', err.message);
+  }
+  return null;
+}
+
+async function insertSupabaseMessage(msg) {
+  if (!isSupabaseConfigured() || !msg) return false;
+  try {
+    const endpoint = `${supabaseUrl}/rest/v1/community_messages`;
+    const payload = {
+      id: msg.id,
+      name: 'Anamika',
+      author: 'Anamika',
+      message: msg.message || msg.text || '',
+      text: msg.text || msg.message || '',
+      file: msg.file || null,
+      timestamp: msg.timestamp,
+      formatted_time: msg.formattedTime || msg.formatted_time || ''
+    };
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn('Failed to insert message into Supabase:', err.message);
+    return false;
+  }
+}
+
+function loadLocalMessages() {
   try {
     if (!fs.existsSync(dbDir)) {
       fs.mkdirSync(dbDir, { recursive: true });
@@ -67,7 +140,6 @@ function loadMessages() {
       const data = fs.readFileSync(messagesFile, 'utf8');
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Enforce anonymity on any historical messages as well
         messages = parsed.map(m => ({
           ...m,
           name: 'Anamika',
@@ -79,24 +151,50 @@ function loadMessages() {
       }
     }
   } catch (err) {
-    console.error('Failed to load community messages:', err);
+    console.error('Failed to load local community messages:', err);
   }
   messages = [...SEED_MESSAGES];
-  saveMessages();
+  saveLocalMessages();
 }
 
-function saveMessages() {
+// Load messages from Supabase (if configured) or local JSON fallback
+export async function loadMessages() {
+  if (isSupabaseConfigured()) {
+    try {
+      const remote = await fetchSupabaseMessages(MAX_HISTORY);
+      if (remote && remote.length > 0) {
+        messages = remote;
+        saveLocalMessages();
+        console.log(`Loaded ${messages.length} community messages from Supabase PostgreSQL.`);
+        return;
+      }
+    } catch (e) {
+      console.warn('Supabase initial fetch failed, falling back to local JSON:', e.message);
+    }
+  }
+  loadLocalMessages();
+}
+
+function saveLocalMessages() {
   try {
     if (!fs.existsSync(dbDir)) {
       fs.mkdirSync(dbDir, { recursive: true });
     }
-    // Limit to MAX_HISTORY
     if (messages.length > MAX_HISTORY) {
       messages = messages.slice(-MAX_HISTORY);
     }
     fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2), 'utf8');
   } catch (err) {
-    console.error('Failed to save community messages:', err);
+    console.error('Failed to save local community messages:', err);
+  }
+}
+
+function saveMessages(newMessage = null) {
+  saveLocalMessages();
+  if (newMessage && isSupabaseConfigured()) {
+    insertSupabaseMessage(newMessage).catch(err => {
+      console.warn('Background Supabase insert error:', err.message);
+    });
   }
 }
 
@@ -180,7 +278,7 @@ export function createMessage(rawText = '', file = null, rateLimitKey = 'default
   }
 
   messages.push(newMessage);
-  saveMessages();
+  saveMessages(newMessage);
 
   return { message: newMessage };
 }

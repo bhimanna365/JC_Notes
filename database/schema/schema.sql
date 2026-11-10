@@ -54,3 +54,34 @@ CREATE TABLE IF NOT EXISTS student_progress (
     last_read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, document_id)
 );
+
+-- ==============================================================================
+-- Community Chat Persistent Storage (Supabase / PostgreSQL)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS community_messages (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(50) NOT NULL DEFAULT 'Anamika',
+    author VARCHAR(50) NOT NULL DEFAULT 'Anamika',
+    message TEXT NOT NULL,
+    text TEXT NOT NULL,
+    file JSONB DEFAULT NULL,
+    timestamp BIGINT NOT NULL,
+    formatted_time VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for ordering history quickly
+CREATE INDEX IF NOT EXISTS idx_community_messages_timestamp ON community_messages(timestamp DESC);
+
+-- Enable Row Level Security (RLS) for Supabase
+ALTER TABLE community_messages ENABLE ROW LEVEL SECURITY;
+
+-- Security Policy: Allow public read access so students can view message history
+CREATE POLICY "Allow public read on community_messages" ON community_messages FOR SELECT USING (true);
+
+-- Security Note: NO public INSERT policy is created.
+-- Direct client inserts via the Supabase public anon key are blocked by default.
+-- Community messages must be submitted exclusively through the Node.js backend API
+-- (which enforces XSS sanitization, length limits, rate limiting, and author anonymity)
+-- and written using SUPABASE_SERVICE_ROLE_KEY.
+

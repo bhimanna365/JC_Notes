@@ -7,7 +7,9 @@ import {
   streamCommunityFile,
   sanitizeFilename,
   getFileCategory,
-  formatBytes
+  formatBytes,
+  uploadFileToSupabaseStorage,
+  MIME_MAP
 } from '../services/communityFileService.js';
 
 export function getMessages(req, res) {
@@ -42,7 +44,7 @@ export function sendMessage(req, res) {
 }
 
 export function uploadFile(req, res) {
-  uploadMiddleware.single('file')(req, res, (err) => {
+  uploadMiddleware.single('file')(req, res, async (err) => {
     if (err) {
       return res.status(400).json({
         success: false,
@@ -67,9 +69,16 @@ export function uploadFile(req, res) {
       // For PDFs, expose via /raw-pdf/community/... for standard viewer integration
       // For other documents/images, expose via /api/community/files/...
       const isPdf = ext === '.pdf';
-      const fileUrl = isPdf 
+      let fileUrl = isPdf 
         ? `/raw-pdf/community/${req.file.filename}` 
         : `/api/community/files/${req.file.filename}`;
+
+      // Upload to persistent Supabase Storage if configured
+      const mimeType = MIME_MAP[ext] || 'application/octet-stream';
+      const cloudUrl = await uploadFileToSupabaseStorage(req.file.filename, req.file.path, mimeType);
+      if (cloudUrl) {
+        fileUrl = cloudUrl;
+      }
 
       const fileMeta = {
         name: cleanName,

@@ -1,5 +1,5 @@
 // AUTO-GENERATED ACADEMIC PDF REPOSITORY MANIFEST
-// Generated on: 2026-10-17 07:10:32
+// Generated on: 2026-11-11 01:18:53
 // Scanned from content/ repository
 // Total PDFs: 144
 

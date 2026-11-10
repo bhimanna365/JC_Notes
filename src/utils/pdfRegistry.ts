@@ -163,6 +163,14 @@ export function registerUploadedPdf(rawDoc: any): PDFDocument | null {
   return doc;
 }
 
+function getApiBaseUrl(): string {
+  const metaEnv = typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined;
+  if (metaEnv && (metaEnv.VITE_API_URL || metaEnv.VITE_PDF_BASE_URL)) {
+    return String(metaEnv.VITE_API_URL || metaEnv.VITE_PDF_BASE_URL).replace(/\/+$/, '');
+  }
+  return '';
+}
+
 /**
  * Synchronizes the PDF registry with the server's all_pdfs_inventory.json
  * Guarantees that freshly uploaded files from other users or past sessions are retrieved in real-time
@@ -173,7 +181,8 @@ export async function syncPdfInventory(): Promise<PDFDocument[]> {
   isSyncing = true;
 
   try {
-    const res = await fetch('/api/pdf/inventory');
+    const apiBase = getApiBaseUrl();
+    const res = await fetch(`${apiBase}/api/pdf/inventory`);
     if (res.ok) {
       const data = await res.json();
       const list = Array.isArray(data) ? data : (data.pdfs && Array.isArray(data.pdfs) ? data.pdfs : []);
