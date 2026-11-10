@@ -1,0 +1,191 @@
+[
+  {
+    "id": "seed-1",
+    "author": "Anamika",
+    "text": "Welcome to the JC Notes Anonymous Community! Ask exam doubts, share subject tips, or discuss topics freely.",
+    "timestamp": 1792186084466,
+    "formattedTime": "02:58 am",
+    "name": "Anamika",
+    "message": "Welcome to the JC Notes Anonymous Community! Ask exam doubts, share subject tips, or discuss topics freely."
+  },
+  {
+    "id": "seed-2",
+    "author": "Anamika",
+    "text": "Does anyone have the Unit 3 notes for Data Structures (24CS330)?",
+    "timestamp": 1792187884483,
+    "formattedTime": "03:28 am",
+    "name": "Anamika",
+    "message": "Does anyone have the Unit 3 notes for Data Structures (24CS330)?"
+  },
+  {
+    "id": "seed-3",
+    "author": "Anamika",
+    "text": "Yes! Check the PDF Notes tab under 24CS330, Unit 3 is uploaded with all the tree diagrams and code.",
+    "timestamp": 1792188964484,
+    "formattedTime": "03:46 am",
+    "name": "Anamika",
+    "message": "Yes! Check the PDF Notes tab under 24CS330, Unit 3 is uploaded with all the tree diagrams and code."
+  },
+  {
+    "id": "seed-4",
+    "author": "Anamika",
+    "text": "Can someone explain question 4 from the 2024 DSD exam paper?",
+    "timestamp": 1792191484484,
+    "formattedTime": "04:28 am",
+    "name": "Anamika",
+    "message": "Can someone explain question 4 from the 2024 DSD exam paper?"
+  },
+  {
+    "id": "msg_1792193392675_skorx4c",
+    "author": "Anamika",
+    "text": "Anyone studying DSA tonight?",
+    "timestamp": 1792193392675,
+    "formattedTime": "04:59 am",
+    "name": "Anamika",
+    "message": "Anyone studying DSA tonight?"
+  },
+  {
+    "id": "msg_1792193527655_ed0qr01",
+    "author": "Anamika",
+    "text": "Anyone studying DSA tonight?",
+    "timestamp": 1792193527655,
+    "formattedTime": "05:02 am",
+    "name": "Anamika",
+    "message": "Anyone studying DSA tonight?"
+  },
+  {
+    "id": "msg_1792193614030_6t6bpbh",
+    "author": "Anamika",
+    "text": "Real-time verification complete!",
+    "timestamp": 1792193614030,
+    "formattedTime": "05:03 am",
+    "name": "Anamika",
+    "message": "Real-time verification complete!"
+  },
+  {
+    "id": "msg_1792196449492_sevj8bx",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "Unit 3 Sample Test Notes",
+    "text": "Unit 3 Sample Test Notes",
+    "timestamp": 1792196449492,
+    "formattedTime": "05:50 am",
+    "file": {
+      "name": "scratch_test.pdf",
+      "url": "/raw-pdf/community/scratch_test_1792196449487_sd9dty.pdf",
+      "type": "pdf",
+      "size": "322 B",
+      "sizeBytes": 322,
+      "relPath": "community/scratch_test_1792196449487_sd9dty.pdf",
+      "isExisting": false
+    }
+  },
+  {
+    "id": "msg_1792196835267_o4e6vyp",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "Traversal test",
+    "text": "Traversal test",
+    "timestamp": 1792196835267,
+    "formattedTime": "05:57 am",
+    "file": {
+      "name": "evil.pdf",
+      "url": "/raw-pdf/community/evil_1792196835263_sd83ie.pdf",
+      "type": "pdf",
+      "size": "322 B",
+      "sizeBytes": 322,
+      "relPath": "community/evil_1792196835263_sd83ie.pdf",
+      "isExisting": false
+    }
+  },
+  {
+    "id": "msg_1792196835302_rlsc3p6",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "First copy",
+    "text": "First copy",
+    "timestamp": 1792196835302,
+    "formattedTime": "05:57 am",
+    "file": {
+      "name": "Data_Structures_Unit_3.pdf",
+      "url": "/raw-pdf/community/Data_Structures_Unit_3_1792196835293_5o3y7l.pdf",
+      "type": "pdf",
+      "size": "322 B",
+      "sizeBytes": 322,
+      "relPath": "community/Data_Structures_Unit_3_1792196835293_5o3y7l.pdf",
+      "isExisting": false
+    }
+  },
+  {
+    "id": "msg_1792196835330_8glqtjt",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "Second copy",
+    "text": "Second copy",
+    "timestamp": 1792196835330,
+    "formattedTime": "05:57 am",
+    "file": {
+      "name": "Data_Structures_Unit_3.pdf",
+      "url": "/raw-pdf/community/Data_Structures_Unit_3_1792196835328_55fe01.pdf",
+      "type": "pdf",
+      "size": "322 B",
+      "sizeBytes": 322,
+      "relPath": "community/Data_Structures_Unit_3_1792196835328_55fe01.pdf",
+      "isExisting": false
+    }
+  },
+  {
+    "id": "msg_1792196972281_51ue94f",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "Here is the verified Data Structures textbook for everyone!",
+    "text": "Here is the verified Data Structures textbook for everyone!",
+    "timestamp": 1792196972281,
+    "formattedTime": "05:59 am",
+    "file": {
+      "name": "24CS330 CIE-1_DSA.pdf",
+      "url": "/raw-pdf/content/pyq/PYQ-24/Test-1/24CS330%20CIE-1_DSA.pdf",
+      "type": "pdf",
+      "size": "1.49 MB",
+      "sizeBytes": 1562760,
+      "relPath": "content/pyq/PYQ-24/Test-1/24CS330 CIE-1_DSA.pdf",
+      "isExisting": true
+    }
+  },
+  {
+    "id": "msg_1792198385318_ag89zmd",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "here is the dsa notes",
+    "text": "here is the dsa notes",
+    "timestamp": 1792198385318,
+    "formattedTime": "06:23 am",
+    "file": {
+      "name": "DSA_CompleteNotes.pdf",
+      "url": "/raw-pdf/community/DSA_CompleteNotes_1792198385211_d8172z.pdf",
+      "type": "pdf",
+      "size": "10.92 MB",
+      "sizeBytes": 11449377,
+      "relPath": "community/DSA_CompleteNotes_1792198385211_d8172z.pdf",
+      "isExisting": false
+    }
+  },
+  {
+    "id": "msg_1792199024360_jfk0kgk",
+    "name": "Anamika",
+    "author": "Anamika",
+    "message": "github pdf",
+    "text": "github pdf",
+    "timestamp": 1792199024360,
+    "formattedTime": "06:33 am",
+    "file": {
+      "name": "Git_Handbook.pdf",
+      "url": "/raw-pdf/community/Git_Handbook_1792199023975_secdd1.pdf",
+      "type": "pdf",
+      "size": "26.52 MB",
+      "sizeBytes": 27809677,
+      "relPath": "community/Git_Handbook_1792199023975_secdd1.pdf",
+      "isExisting": false
+    }
+  }
+]

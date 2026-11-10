@@ -1,0 +1,38 @@
+{
+  "name": "jc-student-notes-platform",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "python scripts/content-index/index_content.py && tsc && vite build",
+    "build:frontend": "python scripts/content-index/index_content.py && npm --prefix frontend run build",
+    "index-content": "python scripts/content-index/index_content.py",
+    "index-pdfs": "python scripts/content-index/index_content.py",
+    "preview": "vite preview",
+    "start": "node backend/src/server.js"
+  },
+  "dependencies": {
+    "lucide-react": "^0.441.0",
+    "multer": "^2.4.0",
+    "prismjs": "^1.29.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/prismjs": "^1.26.4",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.2"
+  }
+}
